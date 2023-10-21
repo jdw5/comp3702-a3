@@ -175,9 +175,9 @@ while True:
 
             # visualize the training when reachedd 95% of the target R100
             if not visualizer_on and r100 > 0.95 * params['stopping_reward']:
-                env = gym.make(args.env, render_mode='human')
+                env = gym.make(args.env)
                 env.reset()
-                env.render()
+                # env.render()
                 # visualizer_on = True
 
 
