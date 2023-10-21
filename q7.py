@@ -30,12 +30,11 @@ if args.env not in hypers:
     raise Exception(f'Hyper-parameters not found for env {args.env} - please add it to the config file (config/dqn.yaml)')
 params = hypers[args.env]
 
-learning_rates = [5.0e-3, 5.0e-4, 5.0e-5]
-lr_1 = list()
-lr_2 = list()
-lr_3 = list()
+networks = ['single-hidden', 'two-hidden']
 
-for learning_rate in learning_rates :
+single = list()
+double = list()
+for network in networks :
 
 
     env = gym.make(args.env)
@@ -52,14 +51,14 @@ for learning_rate in learning_rates :
         device = torch.device("cpu")
         print("Training on CPU")
 
-    if args.network == 'two-hidden':
+    if network == 'two-hidden':
         net = DqnNetTwoLayers(obs_size=env.observation_space.shape[0],
                             hidden_size=params['hidden_size'], hidden_size2=params['hidden_size2'],
                             n_actions=env.action_space.n).to(device)
         target_net = DqnNetTwoLayers(obs_size=env.observation_space.shape[0],
                                     hidden_size=params['hidden_size'], hidden_size2=params['hidden_size2'],
                                     n_actions=env.action_space.n).to(device)
-    elif args.network == 'single-hidden':
+    elif network == 'single-hidden':
         net = DqnNetSingleLayer(obs_size=env.observation_space.shape[0],
                                 hidden_size=params['hidden_size'],
                                 n_actions=env.action_space.n).to(device)
@@ -169,12 +168,10 @@ for learning_rate in learning_rates :
                 l100 = np.mean(losses[-100:])
                 fps = (frame_idx - episode_frame) / (time.time() - episode_start)
                 print(f"Frame: {frame_idx}: Episode: {episode_no}, R100: {r100: .2f}, MaxR: {max_reward: .2f}, R: {episode_reward: .2f}, FPS: {fps: .1f}, L100: {l100: .2f}, Epsilon: {epsilon: .4f}")
-                if learning_rate == learning_rates[0]:
-                    lr_1.append(r100)
-                elif learning_rate == learning_rates[1]:
-                    lr_2.append(r100)
+                if network == 'single-hidden':
+                    single.append(r100)
                 else:
-                    lr_3.append(r100)
+                    double.append(r100)
 
                 # visualize the training when reachedd 95% of the target R100
                 if not visualizer_on and r100 > 0.95 * params['stopping_reward']:
@@ -201,7 +198,7 @@ for learning_rate in learning_rates :
         if r100 > params['stopping_reward']:
             print("Finished training")
 
-            name = f"{args.env}_{args.network}_nn_DQN_act_net_%+.3f_%d.dat" % (r100, frame_idx)
+            name = f"{args.env}_{network}_nn_DQN_act_net_%+.3f_%d.dat" % (r100, frame_idx)
             if not os.path.exists(params['save_path']):
                 os.makedirs(params['save_path'])
             torch.save(net.state_dict(), os.path.join(params['save_path'], name))
@@ -213,13 +210,12 @@ for learning_rate in learning_rates :
             break
 
 plt.figure(figsize=(10, 5))
-plt.plot(lr_1, label=f'LR = {learning_rates[0]}')
-plt.plot(lr_2, label=f'LR = {learning_rates[1]}')
-plt.plot(lr_3, label=f'LR = {learning_rates[2]}')
-plt.title('Cartpole-V1 R100 against Episode Number for Varying Learning Rates')
+plt.plot(single, label='Single DQN')
+plt.plot(double, label='Double DQN')
+plt.title('Cartpole-V1 R100 against Episode Number for Single and Double DQN')
 plt.xlabel('Episode')
 plt.ylabel('R100')
 plt.legend()
 plt.grid(True)
-plt.savefig('results/cartpole_v1_learning_rates.png')
+plt.savefig('results/cartpole_v1_single_double.png')
 plt.show()
