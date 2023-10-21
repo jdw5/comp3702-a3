@@ -177,8 +177,7 @@ while True:
             if not visualizer_on and r100 > 0.95 * params['stopping_reward']:
                 env = gym.make(args.env)
                 env.reset()
-                # env.render()
-                # visualizer_on = True
+
 
 
         episode_reward = 0
