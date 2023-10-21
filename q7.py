@@ -75,7 +75,7 @@ for network in networks :
 
 
     buffer = ExperienceBuffer(int(params['replay_size']), device)
-    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
+    optimizer = optim.Adam(net.parameters(), lr=params['learning_rate'])
     frame_idx = 0
     max_reward = -math.inf
     all_rewards = []
