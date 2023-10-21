@@ -15,7 +15,7 @@ from lib.experience_buffer import ExperienceBuffer, Experience
 import yaml
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-e", "--env", default="CartPole-v1", help="Full name of the environment, e.g. CartPole-v1, LunarLander-v2, etc.")
+parser.add_argument("-e", "--env", default="CartPole-v0", help="Full name of the environment, e.g. CartPole-v1, LunarLander-v2, etc.")
 parser.add_argument("-c", "--config_file", default="config/dqn.yaml", help="Config file with hyper-parameters")
 parser.add_argument("-n", "--network", default='s',
                     help="DQN network architecture `single-hidden` for single hidden layer, `two-hidden` for 2 hidden layers and `duelling-dqn` for duelling DQN",
