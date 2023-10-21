@@ -178,7 +178,7 @@ for epsilon_param in epsilon_params :
                 print()
                 if epsilon_params[0]['epsilon_decay'] == epsilon_param['epsilon_decay']:
                     param1.append(r100)
-                elif epsilon_params[0]['epsilon_decay'] == epsilon_param['epsilon_decay']:
+                elif epsilon_params[1]['epsilon_decay'] == epsilon_param['epsilon_decay']:
                     param2.append(r100)
                 else:
                     param3.append(r100)

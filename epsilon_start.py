@@ -177,7 +177,7 @@ for epsilon_param in epsilon_params :
                 print(f"Frame: {frame_idx}: Episode: {episode_no}, R100: {r100: .2f}, MaxR: {max_reward: .2f}, R: {episode_reward: .2f}, FPS: {fps: .1f}, L100: {l100: .2f}, Epsilon: {epsilon: .4f}")
                 if epsilon_params[0]['epsilon_start'] == epsilon_param['epsilon_start']:
                     param1.append(r100)
-                elif epsilon_params[0]['epsilon_start'] == epsilon_param['epsilon_start']:
+                elif epsilon_params[1]['epsilon_start'] == epsilon_param['epsilon_start']:
                     param2.append(r100)
                 else:
                     param3.append(r100)
