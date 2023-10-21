@@ -33,9 +33,9 @@ params = hypers[args.env]
 # epsilon_decay: 50000
 # epsilon_final: 0.001
 # epsilon_start: 0.250
-param1 = {'epsilon_start': 0.250, 'epsilon_final': 0.001, 'epsilon_decay': 10000}
+param1 = {'epsilon_start': 0.250, 'epsilon_final': 0.1, 'epsilon_decay': 50000}
 param2 = {'epsilon_start': 0.250, 'epsilon_final': 0.001, 'epsilon_decay': 50000}
-param3 = {'epsilon_start': 0.250, 'epsilon_final': 0.001, 'epsilon_decay': 100000}
+param3 = {'epsilon_start': 0.250, 'epsilon_final': 0.00001, 'epsilon_decay': 50000}
 epsilon_params = [param1, param2, param3]
 param1 = list()
 param2 = list()
@@ -219,13 +219,13 @@ for epsilon_param in epsilon_params :
             break
 
 plt.figure(figsize=(10, 5))
-plt.plot(param1, label=f'Decay = {epsilon_params[0]["epsilon_decay"]}')
-plt.plot(param2, label=f'Decay = {epsilon_params[1]["epsilon_decay"]}')
-plt.plot(param3, label=f'Decay = {epsilon_params[2]["epsilon_decay"]}')
-plt.title('Cartpole-V1 R100 against Episode Number for Epsilon Decay')
+plt.plot(param1, label=f'Final = {epsilon_params[0]["epsilon_final"]}')
+plt.plot(param2, label=f'Final = {epsilon_params[1]["epsilon_final"]}')
+plt.plot(param3, label=f'Final = {epsilon_params[2]["epsilon_final"]}')
+plt.title('Cartpole-V1 R100 against Episode Number for Epsilon Final')
 plt.xlabel('Episode')
 plt.ylabel('R100')
 plt.legend()
 plt.grid(True)
-plt.savefig('results/cartpole_v1_epsilon_decay.png')
+plt.savefig('results/cartpole_v1_epsilon_final.png')
 plt.show()
