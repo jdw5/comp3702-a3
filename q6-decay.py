@@ -175,9 +175,10 @@ for epsilon_param in epsilon_params :
                 l100 = np.mean(losses[-100:])
                 fps = (frame_idx - episode_frame) / (time.time() - episode_start)
                 print(f"Frame: {frame_idx}: Episode: {episode_no}, R100: {r100: .2f}, MaxR: {max_reward: .2f}, R: {episode_reward: .2f}, FPS: {fps: .1f}, L100: {l100: .2f}, Epsilon: {epsilon: .4f}")
-                if epsilon_param['epsilon_decay'] == param1[0]['epsilon_decay']:
+                print()
+                if epsilon_params[0]['epsilon_decay'] == epsilon_param['epsilon_decay']:
                     param1.append(r100)
-                elif epsilon_param['epsilon_decay'] == param2[1]['epsilon_decay']:
+                elif epsilon_params[0]['epsilon_decay'] == epsilon_param['epsilon_decay']:
                     param2.append(r100)
                 else:
                     param3.append(r100)
