@@ -14,7 +14,7 @@ import collections
 import torch
 import torch.optim as optim
 
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 from utils import alpha_sync, load_hyperparams
 
