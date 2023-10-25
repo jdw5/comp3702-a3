@@ -89,7 +89,7 @@ for network in networks :
     episode_no = 0
     visualizer_on = False
 
-    state, _ = env.reset()
+    state = env.reset()
 
     def calculate_loss(net, target_net):
         states_v, actions_v, rewards_v, dones_v, next_states_v = buffer.sample(params['batch_size'])
