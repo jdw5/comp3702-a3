@@ -30,12 +30,15 @@ if args.env not in hypers:
     raise Exception(f'Hyper-parameters not found for env {args.env} - please add it to the config file (config/dqn.yaml)')
 params = hypers[args.env]
 
-networks = ['single-hidden', 'two-hidden', 'duelling-dqn']
+learning_rates = [1.0e-1, 1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5]
 
-single = list()
-double = list()
-duelling = list()
-for network in networks :
+plotA = list()
+plotB = list()
+plotC = list()
+plotD = list()
+plotE = list()
+
+for learning_rate in learning_rates :
 
 
     env = gym.make(args.env)
@@ -52,14 +55,14 @@ for network in networks :
         device = torch.device("cpu")
         print("Training on CPU")
 
-    if network == 'two-hidden':
+    if args.network == 'two-hidden':
         net = DqnNetTwoLayers(obs_size=env.observation_space.shape[0],
                             hidden_size=params['hidden_size'], hidden_size2=params['hidden_size2'],
                             n_actions=env.action_space.n).to(device)
         target_net = DqnNetTwoLayers(obs_size=env.observation_space.shape[0],
                                     hidden_size=params['hidden_size'], hidden_size2=params['hidden_size2'],
                                     n_actions=env.action_space.n).to(device)
-    elif network == 'single-hidden':
+    elif args.network == 'single-hidden':
         net = DqnNetSingleLayer(obs_size=env.observation_space.shape[0],
                                 hidden_size=params['hidden_size'],
                                 n_actions=env.action_space.n).to(device)
@@ -76,7 +79,7 @@ for network in networks :
 
 
     buffer = ExperienceBuffer(int(params['replay_size']), device)
-    optimizer = optim.Adam(net.parameters(), lr=params['learning_rate'])
+    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
     frame_idx = 0
     max_reward = -math.inf
     all_rewards = []
@@ -169,12 +172,16 @@ for network in networks :
                 l100 = np.mean(losses[-100:])
                 fps = (frame_idx - episode_frame) / (time.time() - episode_start)
                 print(f"Frame: {frame_idx}: Episode: {episode_no}, R100: {r100: .2f}, MaxR: {max_reward: .2f}, R: {episode_reward: .2f}, FPS: {fps: .1f}, L100: {l100: .2f}, Epsilon: {epsilon: .4f}")
-                if network == 'single-hidden':
-                    single.append(r100)
-                elif network == 'two-hidden':
-                    double.append(r100)
-                else :
-                    duelling.append(r100)
+                if learning_rate == learning_rates[0]:
+                    plotA.append(r100)
+                elif learning_rate == learning_rates[1]:
+                    plotB.append(r100)
+                elif learning_rate == learning_rates[2]:
+                    plotC.append(r100)
+                elif learning_rate == learning_rates[3]:
+                    plotD.append(r100)
+                else:
+                    plotE.append(r100)
 
                 # visualize the training when reachedd 95% of the target R100
                 if not visualizer_on and r100 > 0.95 * params['stopping_reward']:
@@ -201,7 +208,7 @@ for network in networks :
         if r100 > params['stopping_reward']:
             print("Finished training")
 
-            name = f"{args.env}_{network}_nn_DQN_act_net_%+.3f_%d.dat" % (r100, frame_idx)
+            name = f"{args.env}_nn_DQN_act_net_%+.3f_%d.dat" % (r100, frame_idx)
             if not os.path.exists(params['save_path']):
                 os.makedirs(params['save_path'])
             torch.save(net.state_dict(), os.path.join(params['save_path'], name))
@@ -213,13 +220,13 @@ for network in networks :
             break
 
 plt.figure(figsize=(10, 5))
-plt.plot(single, label='Single DQN')
-plt.plot(double, label='Double DQN')
-plt.plot(duelling, label='Duelling DQN')
-plt.title('LunarLander-v2 R100 against Episode Number for Different Networks')
+plt.plot(plotA, label=f'LR = {learning_rates[0]}')
+plt.plot(plotB, label=f'LR = {learning_rates[1]}')
+plt.plot(plotC, label=f'LR = {learning_rates[2]}')
+plt.title('LunarLander-v2 R100 against Episode Number for Varying Epsilon Start')
 plt.xlabel('Episode')
 plt.ylabel('R100')
 plt.legend()
 plt.grid(True)
-plt.savefig('results/q8_networks.png')
+plt.savefig('results/q8_start.png')
 plt.show()
