@@ -55,7 +55,7 @@ CartPole-v1:
 LunarLander-v2:
   gamma: 0.99
   batch_size: 128
-  hidden_size: 256
+  hidden_size: 512
   hidden_size2: 300
 
   replay_size: 1.0e+6
